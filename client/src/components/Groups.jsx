@@ -1,40 +1,39 @@
-import React from 'react';
-import './Groups.css';
+import React from "react";
+import "./Groups.css";
 
 const Groups = ({ data, handleBinClick }) => {
-  const getColor = (colorCode) => {
-    switch (colorCode) {
-      case 1: return 'red';
-      case 2: return 'yellow';
-      case 3: return 'blue';
-      case 4: return 'green';
-      default: return 'white';
-    }
-  };
-
   return (
     <div className="groups-section">
       <h2 className="groups-header">Groups</h2>
-      {data.map((group,index) =>  (
-         <div key={index} className="group-container">
+      {data.map((group, index) => (
+        <div key={index} className="group-container">
           <h3>{group.Group_id}</h3>
           <div className="group-tables">
-            {group.WRacks.map(wrack => (
-              <table className="single-column-table" key={wrack.WRack_id}>
+            {group.racks.map((rack) => (
+              <table className="single-column-table" key={rack.rack_id}>
                 <thead>
                   <tr>
-                    <th>{wrack.WRack_id}</th>
+                    <th>{rack.rack_id}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {[0, 1, 2, 3].map(row => (
-                    <tr key={row}>
+                  {rack.bins.map((bin, rowIndex) => (
+                    <tr key={rowIndex}>
                       <td
                         style={{
-                          backgroundColor: wrack.bins[row] ? (wrack.bins[row].clicked ? 'gray' : getColor(wrack.bins[row].color)) : 'white'
+                          backgroundColor: bin.clicked
+                            ? "gray"
+                            : `rgb(${bin.color})`,
                         }}
-                        onClick={() => wrack.bins[row] && handleBinClick(group.Group_id, wrack.WRack_id, wrack.bins[row].bin_id)}>
-                        {wrack.bins[row] ? wrack.bins[row].bin_id : ''}
+                        onClick={() => {
+                          handleBinClick(
+                            group.Group_id,
+                            rack.rack_id,
+                            bin.bin_id
+                          );
+                        }}
+                      >
+                        {bin.bin_id}
                       </td>
                     </tr>
                   ))}

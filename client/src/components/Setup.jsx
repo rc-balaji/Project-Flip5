@@ -1,18 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Form, Button, Card, Container, Row, Col } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import './Setup.css';
+import React, { useState } from "react";
+import axios from "axios";
+import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./Setup.css";
 
-const Setup = ({fetchData}) => {
-  const [newGroupId, setNewGroupId] = useState('');
-  const [groupIdForWrack, setGroupIdForWrack] = useState('');
-  const [newWrackId, setNewWrackId] = useState('');
-  const [groupIdForSchedule, setGroupIdForSchedule] = useState('');
-  const [wrackIdForSchedule, setWrackIdForSchedule] = useState('');
-  const [binIdForSchedule, setBinIdForSchedule] = useState('');
-  const [scheduleTime, setScheduleTime] = useState('');
+const colors = [
+  { name: "Red", value: "255,0,0" },
+  { name: "Green", value: "0,255,0" },
+  { name: "Blue", value: "0,0,255" },
+  { name: "Yellow", value: "255,255,0" },
+  { name: "Cyan", value: "0,255,255" },
+  { name: "Magenta", value: "255,0,255" },
+  { name: "Orange", value: "255,165,0" },
+  { name: "Purple", value: "128,0,128" },
+  { name: "Gray", value: "128,128,128" },
+  { name: "Lime", value: "0,255,123" },
+];
+
+const Setup = ({ fetchData }) => {
+  const [newGroupId, setNewGroupId] = useState("");
+  const [groupIdForWrack, setGroupIdForWrack] = useState("");
+  const [newWrackId, setNewWrackId] = useState("");
+  const [macAddress, setMacAddress] = useState("");
+  const [groupIdForSchedule, setGroupIdForSchedule] = useState("");
+  const [wrackIdForSchedule, setWrackIdForSchedule] = useState("");
+  const [binIdForSchedule, setBinIdForSchedule] = useState("");
+  const [scheduleTime, setScheduleTime] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
 
   const notify = (message, type) => {
     toast[type](message, {
@@ -28,38 +43,58 @@ const Setup = ({fetchData}) => {
     fetchData();
   };
 
-  
-
   const handleAddGroup = () => {
-    axios.post('http://localhost:5000/new/group', { newGroupid: newGroupId })
-      .then(response => {
-        notify('Group added successfully!', 'success');
-        setNewGroupId('');
+    axios
+      .post("http://localhost:5000/new/group", { newGroupid: newGroupId })
+      .then((response) => {
+        notify("Group added successfully!", "success");
+        setNewGroupId("");
       })
-      .catch(error => notify('Failed to add group', 'error'));
+      .catch((error) => notify("Failed to add group", "error"));
   };
 
   const handleAddWrack = () => {
-    axios.post('http://localhost:5000/new/wrack', { Groupid: groupIdForWrack, newWrackid: newWrackId })
-      .then(response => {
-        notify('Wrack added successfully!', 'success');
-        setGroupIdForWrack('');
-        setNewWrackId('');
+    axios
+      .post("http://localhost:5000/new/wrack", {
+        Groupid: groupIdForWrack,
+        newWrackid: newWrackId,
+        mac: macAddress,
       })
-      .catch(error => notify('Failed to add wrack', 'error'));
+      .then((response) => {
+        notify("Wrack added successfully!", "success");
+        setGroupIdForWrack("");
+        setNewWrackId("");
+        setMacAddress("");
+      })
+      .catch((error) => notify("Failed to add wrack", "error"));
   };
 
   const handleAddSchedule = () => {
-    const newSchedule = { time: scheduleTime, enabled: false };
-    axios.post('http://localhost:5000/new/schedule', { group_id: groupIdForSchedule, wrack_id: wrackIdForSchedule, bin_id: binIdForSchedule, new_schduled: newSchedule })
-      .then(response => {
-        notify('Schedule added successfully!', 'success');
-        setGroupIdForSchedule('');
-        setWrackIdForSchedule('');
-        setBinIdForSchedule('');
-        setScheduleTime('');
+    const newSchedule = {
+      time: scheduleTime,
+      enabled: false,
+      color: selectedColor.split(",").map(Number),
+    };
+    axios
+      .post("http://localhost:5000/new/schedule", {
+        group_id: groupIdForSchedule,
+        wrack_id: wrackIdForSchedule,
+        bin_id: binIdForSchedule,
+        new_schduled: newSchedule,
       })
-      .catch(error => notify('Failed to add schedule', 'error'));
+      .then((response) => {
+        notify("Schedule added successfully!", "success");
+        setGroupIdForSchedule("");
+        setWrackIdForSchedule("");
+        setBinIdForSchedule("");
+        setScheduleTime("");
+        setSelectedColor("");
+      })
+      .catch((error) => notify("Failed to add schedule", "error"));
+  };
+
+  const handleColorSelect = (colorValue) => {
+    setSelectedColor(colorValue);
   };
 
   return (
@@ -80,7 +115,9 @@ const Setup = ({fetchData}) => {
                     onChange={(e) => setNewGroupId(e.target.value)}
                   />
                 </Form.Group>
-                <Button variant="primary" onClick={handleAddGroup}>Add Group</Button>
+                <Button variant="primary" onClick={handleAddGroup}>
+                  Add Group
+                </Button>
               </Form>
             </Card.Body>
           </Card>
@@ -106,7 +143,17 @@ const Setup = ({fetchData}) => {
                     onChange={(e) => setNewWrackId(e.target.value)}
                   />
                 </Form.Group>
-                <Button variant="primary" onClick={handleAddWrack}>Add Wrack</Button>
+                <Form.Group controlId="macAddress">
+                  <Form.Label>MAC Address</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={macAddress}
+                    onChange={(e) => setMacAddress(e.target.value)}
+                  />
+                </Form.Group>
+                <Button variant="primary" onClick={handleAddWrack}>
+                  Add Wrack
+                </Button>
               </Form>
             </Card.Body>
           </Card>
@@ -148,7 +195,28 @@ const Setup = ({fetchData}) => {
                     onChange={(e) => setScheduleTime(e.target.value)}
                   />
                 </Form.Group>
-                <Button variant="primary" onClick={handleAddSchedule}>Add Schedule</Button>
+                <Form.Group controlId="color">
+                  <Form.Label>Color</Form.Label>
+                  <div className="color-selector">
+                    {colors.map((color) => (
+                      <div
+                        key={color.value}
+                        className="color-box"
+                        style={{
+                          backgroundColor: `rgb(${color.value})`,
+                          border:
+                            selectedColor === color.value
+                              ? "2px solid black"
+                              : "none",
+                        }}
+                        onClick={() => handleColorSelect(color.value)}
+                      ></div>
+                    ))}
+                  </div>
+                </Form.Group>
+                <Button variant="primary" onClick={handleAddSchedule}>
+                  Add Schedule
+                </Button>
               </Form>
             </Card.Body>
           </Card>
