@@ -14,7 +14,7 @@ const colors = [
   { name: "Magenta", value: "255,0,255" },
   { name: "Orange", value: "255,165,0" },
   { name: "Purple", value: "128,0,128" },
-  { name: "Gray", value: "128,128,128" },
+  { name: "Brown", value: "165, 42, 42" },
   { name: "Lime", value: "0,255,123" },
 ];
 
