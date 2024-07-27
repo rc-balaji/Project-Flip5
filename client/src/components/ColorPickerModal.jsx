@@ -10,8 +10,8 @@ const colors = [
   [255, 0, 255], // Magenta
   [255, 165, 0], // Orange
   [128, 0, 128], // Purple
-  [0, 128, 0], // Dark Green
-  [128, 128, 128], // Gray
+  [165, 42, 42], // BROWN
+  [0, 255, 123], // Lime
 ];
 
 const ColorPickerModal = ({

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Setup.css";
-
+import "react-tooltip/dist/react-tooltip.css";
+import { Tooltip } from "react-tooltip";
 const colors = [
   { name: "Red", value: "255,0,0" },
   { name: "Green", value: "0,255,0" },
@@ -14,7 +15,7 @@ const colors = [
   { name: "Magenta", value: "255,0,255" },
   { name: "Orange", value: "255,165,0" },
   { name: "Purple", value: "128,0,128" },
-  { name: "Gray", value: "128,128,128" },
+  { name: "Brown", value: "165, 42, 42" },
   { name: "Lime", value: "0,255,123" },
 ];
 
@@ -28,6 +29,18 @@ const Setup = ({ fetchData }) => {
   const [binIdForSchedule, setBinIdForSchedule] = useState("");
   const [scheduleTime, setScheduleTime] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  const [ipAddress, setIpAddress] = useState("");
+  const [newIP, setNewIP] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/address/getIP")
+      .then((response) => {
+        console.log(response.data.ip);
+        setNewIP(response.data.ip || "");
+      })
+      .catch((error) => notify("Failed to fetch IP address", "error"));
+  }, []);
 
   const notify = (message, type) => {
     toast[type](message, {
@@ -62,9 +75,9 @@ const Setup = ({ fetchData }) => {
       })
       .then((response) => {
         notify("Wrack added successfully!", "success");
-        setGroupIdForWrack("");
-        setNewWrackId("");
-        setMacAddress("");
+        // setGroupIdForWrack("");
+        // setNewWrackId("");
+        // setMacAddress("");
       })
       .catch((error) => notify("Failed to add wrack", "error"));
   };
@@ -97,11 +110,42 @@ const Setup = ({ fetchData }) => {
     setSelectedColor(colorValue);
   };
 
+  const handleSetIpAddress = () => {
+    axios
+      .post("http://localhost:5000/address/setIP", { ip: ipAddress })
+      .then((response) => {
+        setNewIP(ipAddress);
+        setIpAddress("");
+        notify("IP address set successfully!", "success");
+      })
+      .catch((error) => notify("Failed to set IP address", "error"));
+  };
+
   return (
     <Container className="setup">
       <h1>Setup</h1>
       <ToastContainer />
       <Row>
+        <Col md={4}>
+          <Card className="setup-card">
+            <Card.Body>
+              <Card.Title>Set IP Address</Card.Title>
+              <Form>
+                <Form.Group controlId="ipAddress">
+                  <Form.Label>IP Address : {newIP}</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={ipAddress || ""}
+                    onChange={(e) => setIpAddress(e.target.value)}
+                  />
+                </Form.Group>
+                <Button variant="primary" onClick={handleSetIpAddress}>
+                  Set IP Address
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
         <Col md={4}>
           <Card className="setup-card">
             <Card.Body>
@@ -111,7 +155,7 @@ const Setup = ({ fetchData }) => {
                   <Form.Label>New Group ID</Form.Label>
                   <Form.Control
                     type="text"
-                    value={newGroupId}
+                    value={newGroupId || ""}
                     onChange={(e) => setNewGroupId(e.target.value)}
                   />
                 </Form.Group>
@@ -131,7 +175,7 @@ const Setup = ({ fetchData }) => {
                   <Form.Label>Group ID</Form.Label>
                   <Form.Control
                     type="text"
-                    value={groupIdForWrack}
+                    value={groupIdForWrack || ""}
                     onChange={(e) => setGroupIdForWrack(e.target.value)}
                   />
                 </Form.Group>
@@ -139,7 +183,7 @@ const Setup = ({ fetchData }) => {
                   <Form.Label>New Wrack ID</Form.Label>
                   <Form.Control
                     type="text"
-                    value={newWrackId}
+                    value={newWrackId || ""}
                     onChange={(e) => setNewWrackId(e.target.value)}
                   />
                 </Form.Group>
@@ -147,7 +191,7 @@ const Setup = ({ fetchData }) => {
                   <Form.Label>MAC Address</Form.Label>
                   <Form.Control
                     type="text"
-                    value={macAddress}
+                    value={macAddress || ""}
                     onChange={(e) => setMacAddress(e.target.value)}
                   />
                 </Form.Group>
@@ -167,7 +211,7 @@ const Setup = ({ fetchData }) => {
                   <Form.Label>Group ID</Form.Label>
                   <Form.Control
                     type="text"
-                    value={groupIdForSchedule}
+                    value={groupIdForSchedule || ""}
                     onChange={(e) => setGroupIdForSchedule(e.target.value)}
                   />
                 </Form.Group>
@@ -175,7 +219,7 @@ const Setup = ({ fetchData }) => {
                   <Form.Label>Wrack ID</Form.Label>
                   <Form.Control
                     type="text"
-                    value={wrackIdForSchedule}
+                    value={wrackIdForSchedule || ""}
                     onChange={(e) => setWrackIdForSchedule(e.target.value)}
                   />
                 </Form.Group>
@@ -183,7 +227,7 @@ const Setup = ({ fetchData }) => {
                   <Form.Label>Bin ID</Form.Label>
                   <Form.Control
                     type="text"
-                    value={binIdForSchedule}
+                    value={binIdForSchedule || ""}
                     onChange={(e) => setBinIdForSchedule(e.target.value)}
                   />
                 </Form.Group>
@@ -191,16 +235,19 @@ const Setup = ({ fetchData }) => {
                   <Form.Label>Schedule Time</Form.Label>
                   <Form.Control
                     type="time"
-                    value={scheduleTime}
+                    value={scheduleTime || ""}
                     onChange={(e) => setScheduleTime(e.target.value)}
                   />
                 </Form.Group>
                 <Form.Group controlId="color">
                   <Form.Label>Color</Form.Label>
                   <div className="color-selector">
-                    {colors.map((color) => (
+                    {colors.map((color, index) => (
                       <div
-                        key={color.value}
+                        data-tooltip-id={`tooltip-${index}`}
+                        data-tooltip-content={color.name}
+                        data-tooltip-place="top"
+                        key={index}
                         className="color-box"
                         style={{
                           backgroundColor: `rgb(${color.value})`,
@@ -210,10 +257,14 @@ const Setup = ({ fetchData }) => {
                               : "none",
                         }}
                         onClick={() => handleColorSelect(color.value)}
-                      ></div>
+                      >
+                        {/* This is where the tooltip is referenced by its ID */}
+                        <Tooltip id={`tooltip-${index}`} />
+                      </div>
                     ))}
                   </div>
                 </Form.Group>
+
                 <Button variant="primary" onClick={handleAddSchedule}>
                   Add Schedule
                 </Button>

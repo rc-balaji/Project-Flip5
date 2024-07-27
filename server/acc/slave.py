@@ -12,6 +12,10 @@ import _thread
 # [44, 188, 187, 5, 59, 0]
 # >>> 
 # Function to initialize WiFi and ESP-NOW
+bins = []
+ 
+
+
 def init_espnow():
     sta = network.WLAN(network.STA_IF)
     sta.active(True)
@@ -101,7 +105,8 @@ class Bin:
         self.espnow_instance.send(self.master_mac, msg)
         print(f"Sent message to {self.master_mac}: {msg}")
 
-def handle_push_message(msg_data, bins, config, rack_id):
+def handle_push_message(msg_data, config, rack_id):
+    global bins;
     bin_index = msg_data['binIndex']
     schedule_time = msg_data['schedulesTime']
     color = tuple(msg_data.get('color', (0, 0, 0)))  # Default to black if color is not providedFind the bin with the given rack_id and bin_index
@@ -125,9 +130,11 @@ def handle_push_message(msg_data, bins, config, rack_id):
             bin.change_led_color()
             break
 
-def handle_color_change_message(msg_data, bins, config, rack_id):
+def handle_color_change_message(msg_data, config, rack_id):
+    global bins;
     bin_index = msg_data['binIndex']
     color = tuple(msg_data['color'])
+    print("CALLEDDD")
     # Find the bin with the given rack_id and bin_index
     for bin in bins:
         if bin.index == bin_index:
@@ -142,7 +149,8 @@ def handle_color_change_message(msg_data, bins, config, rack_id):
             bin.change_led_color()
             break
 
-def handle_click_change_message(msg_data, bins, config, rack_id):
+def handle_click_change_message(msg_data, config, rack_id):
+    global bins;
     bin_index = msg_data['binIndex']
     
     # Find the bin with the given rack_id and bin_index
@@ -162,58 +170,123 @@ def handle_click_change_message(msg_data, bins, config, rack_id):
                 bin.change_led_color()
             break
 
-def espnow_listener(e, bins, config, rack_id):
+def handle_add_rack(msg_data):
+    global bins;
+    print(msg_data)
+    new_rack_id = msg_data['new_rack_id']
+    print(new_rack_id)
+    master = msg_data['master']
+    print(new_rack_id,master[:2])
+    new_rack = {
+                    "rack_id": new_rack_id,
+                    "master":master,
+                    "bins": []
+                }
+    led_pins = [12, 25, 26, 27]
+    button_pins = [13, 14, 15, 16]
+    bin_count = 4
+    new_rack['bins'] = [
+                    {
+                        "color": [64,64,64],
+                        "led_pin": led_pins[i],
+                        "bin_id": f"{new_rack_id}_0{i+1}",
+                        "button_pin": button_pins[i],
+                        "enabled": False,
+                        "schedules": [],
+                        "clicked": False
+                    }
+                    for i in range(bin_count)
+                ]
+    
+    print("nnnnnnnnnnnnnnnnnn")
+    print(new_rack)
+    with open('slave.json', 'w') as f:
+        ujson.dump(new_rack, f)
+    main()
+    
+ 
+
+def espnow_listener( config, rack_id):
+    global e,bins
     while True:
         try:
+            if e is None:
+                print("ESP-NOW instance not initialized.")
+                time.sleep(1)
+                continue
+
             host, msg = e.recv()
             if msg:
-                print(f"Received message from {host}")
+                print(f"Received message from {host}: {msg}")
                 try:
                     msg_data = ujson.loads(msg)
                     operation = msg_data.get('operation')
 
                     if operation == 'push':
-                        handle_push_message(msg_data, bins, config, rack_id)
+                        handle_push_message(msg_data, config, rack_id)
                     elif operation == 'color-change':
-                        handle_color_change_message(msg_data, bins, config, rack_id)
+                        handle_color_change_message(msg_data, config, rack_id)
                     elif operation == 'click-change':
-                        handle_click_change_message(msg_data, bins, config, rack_id)
+                        handle_click_change_message(msg_data, config, rack_id)
+                    elif operation == 'add-rack':
+                        handle_add_rack(msg_data)
                     else:
                         print(f"Unknown operation: {operation}")
 
+                except ujson.JSONDecodeError as json_err:
+                    print(f"Error parsing JSON message: {msg}. Error: {json_err}")
+                except KeyError as key_err:
+                    print(f"Missing expected key in message: {msg}. Error: {key_err}")
                 except Exception as err:
-                    print(f"Error parsing message: {msg}. Error: {err}")
-        
+                    print(f"Unexpected error processing message: {msg}. Error: {err}")
+            else:
+                print("No message received.")
+
         except Exception as err:
             print(f"Error receiving message: {err}")
+            # If the error is related to ESP-NOW instance, consider reinitializing it.
+            e = init_espnow()
+            e.add_peer(master_mac)
 
         time.sleep(1)  # Minimal delay to keep the system running
 
+
+config , master_mac , rack_id,e= None , None , None,None
+
+
+def main():
+    global config , master_mac , rack_id,e,bins
+    bins = None
+    bins = []
+    config = read_config()
+    master_mac = bytes(config['master'])
+    rack_id = config.get('rack_id')
+    e = None
+    e = init_espnow()
+    try: 
+        e.add_peer(master_mac)
+    except Exception:
+        print("Already")
+    print("Master MAC address added as peer.")
+    for i, bin_config in enumerate(config['bins']):
+        bins.append(Bin(bin_config, i, rack_id, e, master_mac))
+        print(f"Bin {i + 1} Configured")  # Add delay to ensure hardware is properly configured
+    print("All bins initialized and ready.")
+
 # Main script
-config = read_config()
-master_mac = bytes(config['master'])
-rack_id = config.get('rack_id')
 
+main()
 # Initialize ESP-NOW
-e = init_espnow()
 
-# Add master MAC address as peer
-e.add_peer(master_mac)
-print("Master MAC address added as peer.")
-
-# Create Bin instances for all bins in the configuration
-bins = []
-for i, bin_config in enumerate(config['bins']):
-    bins.append(Bin(bin_config, i, rack_id, e, master_mac))
-    print(f"Bin {i + 1} Configured")  # Add delay to ensure hardware is properly configured
-print("All bins initialized and ready.")
 
 # Start ESP-NOW listener in a new thread
-_thread.start_new_thread(espnow_listener, (e, bins, config, rack_id))
+_thread.start_new_thread(espnow_listener, (config, rack_id))
 
 # Main loop to keep the script running
 while True:
     time.sleep(1)
+
+
 
 
 

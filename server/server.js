@@ -8,6 +8,9 @@ const axios = require("axios");
 const app = express();
 const port = 5000;
 
+// console.log(serv);
+// const { updateBinClicked, updateBinColorESP, updatePushScheduleESP } = serv;
+
 app.use(cors());
 app.use(express.json());
 
@@ -56,6 +59,52 @@ const readUsersFromExcel = () => {
   const users = xlsx.utils.sheet_to_json(sheet);
   return users;
 };
+
+const readStaticIP = () => {
+  try {
+    const fileContent = fs.readFileSync("./static.json", "utf8");
+    const data = JSON.parse(fileContent);
+    return data.IP;
+  } catch (error) {
+    console.error("Error reading static.json:", error);
+    throw new Error("Error reading static.json");
+  }
+};
+
+var ip = readStaticIP();
+
+// Utility function to write static IP to static.json
+const writeStaticIP = (newIP) => {
+  try {
+    var data = { IP: newIP };
+    fs.writeFileSync("./static.json", JSON.stringify(data, null, 2), "utf8");
+    ip = newIP;
+  } catch (error) {
+    console.error("Error writing static.json:", error);
+    throw new Error("Error writing static.json");
+  }
+};
+
+app.get("/address/getIP", (req, res) => {
+  try {
+    var staticIP = readStaticIP();
+    res.json({ ip: staticIP });
+  } catch (error) {
+    res.status(500).send("Error reading static IP");
+  }
+});
+
+// API to update the static IP
+app.post("/address/setIP", (req, res) => {
+  console.log("called");
+  var { ip } = req.body;
+  try {
+    writeStaticIP(ip);
+    res.json({ message: "Static IP updated successfully" });
+  } catch (error) {
+    res.status(500).send("Error updating static IP");
+  }
+});
 
 // Login route
 app.post("/login", (req, res) => {
@@ -118,7 +167,7 @@ app.post("/import", upload.single("file"), (req, res) => {
   updateCache(); // Ensure cache is up-to-date
 
   jsonData.forEach((row) => {
-    const { Group_id, rack_id, bin_id, scheduled_time } = row;
+    const { Group_id, rack_id, bin_id, scheduled_time, color } = row;
     const group = cache.find((group) => group.Group_id === Group_id);
     if (!group) {
       return res.status(404).json({ error: "Group not found" });
@@ -131,9 +180,12 @@ app.post("/import", upload.single("file"), (req, res) => {
     if (!bin) {
       return res.status(404).json({ error: "Bin not found" });
     }
+
+    var colorArr = color.split(",").map(Number);
     bin.schedules.push({
       enabled: false,
       time: scheduled_time,
+      color: colorArr,
     });
   });
 
@@ -187,24 +239,6 @@ app.put("/bin/update/schedule", (req, res) => {
 });
 
 // Update bin color
-const updateBinColorESP = async (group_id, rack_id, bin_id, color) => {
-  try {
-    const response = await axios.post("http://192.168.231.227:8000/", {
-      group_id,
-      rack_id,
-      bin_id,
-      operation: "color-change",
-      color,
-    });
-
-    console.log("Color updated successfully:", response.data);
-  } catch (error) {
-    console.error(
-      "Error updating bin color:",
-      error.response ? error.response.data : error.message
-    );
-  }
-};
 
 // Toggle enabled
 app.post("/bin/update/enabled", (req, res) => {
@@ -230,23 +264,6 @@ app.post("/bin/update/enabled", (req, res) => {
 });
 
 // Update bin color
-const updateBinClicked = async (group_id, rack_id, bin_id) => {
-  try {
-    const response = await axios.post("http://192.168.231.227:8000/", {
-      group_id,
-      rack_id,
-      bin_id,
-      operation: "click-change",
-    });
-
-    console.log("Clickde updated successfully:", response.data);
-  } catch (error) {
-    console.error(
-      "Error updating Clicked Event color:",
-      error.response ? error.response.data : error.message
-    );
-  }
-};
 
 // Toggle clicked
 app.post("/bin/update/clicked", (req, res) => {
@@ -309,6 +326,7 @@ app.post("/new/group", (req, res) => {
   };
 
   cache.push(newGroup);
+  updateADDGroupESP(newGroupid);
   saveDataToFile(cache);
   res.json({ message: "Group added successfully", group: newGroup });
 });
@@ -320,7 +338,7 @@ app.post("/new/wrack", (req, res) => {
   const group = cache.find((group) => group.Group_id === Groupid);
   if (!group) return res.status(404).json({ error: "Group not found" });
 
-  // Check if rack already exists
+  // Check if rack already exists in the current group
   const existingRack = group.racks.find((rack) => rack.rack_id === newWrackid);
   if (existingRack)
     return res.status(400).json({ error: "Rack already exists" });
@@ -329,13 +347,41 @@ app.post("/new/wrack", (req, res) => {
     rack_id: newWrackid,
   };
 
+  function checkArraysEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) return false;
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  const curr_mac = mac.split(",").map(Number);
+
+  // Check if the MAC address exists in the first rack of any other group
+  let master_mac = null;
+  for (const otherGroup of cache) {
+    if (otherGroup.Group_id !== Groupid && otherGroup.racks.length > 0) {
+      const otherRackMac = otherGroup.racks[0].mac;
+      if (checkArraysEqual(otherRackMac, curr_mac)) {
+        return res
+          .status(400)
+          .json({ error: "Master MAC already exists in another group" });
+      }
+    }
+  }
+
+  // If no conflicts found, set master_mac for current group if it exists
   if (group.racks.length > 0) {
-    console.log(group.racks);
-    console.log(group.racks[0]);
-    newRack.master = group.racks[0].mac.map((e) => e);
-    newRack.mac = mac.split(",").map(Number);
+    master_mac = group.racks[0].mac;
+  }
+
+  if (master_mac && !checkArraysEqual(master_mac, curr_mac)) {
+    newRack.master = master_mac;
+    newRack.mac = curr_mac;
   } else {
-    newRack.mac = mac.split(",").map(Number);
+    newRack.mac = curr_mac;
   }
 
   const ledPins = [12, 25, 26, 27]; // Replace with your actual led pin values
@@ -343,7 +389,7 @@ app.post("/new/wrack", (req, res) => {
 
   const binCount = 4;
   const binsToAdd = Array.from({ length: binCount }, (_, index) => ({
-    color: [255, 255, 255],
+    color: [50, 50, 50],
     led_pin: ledPins[index],
     bin_id: `${newWrackid}_0${index + 1}`,
     button_pin: buttonPins[index],
@@ -354,36 +400,15 @@ app.post("/new/wrack", (req, res) => {
 
   newRack.bins = binsToAdd;
 
+  if (master_mac && checkArraysEqual(master_mac, curr_mac)) {
+    group.racks = []; // Clear all racks if MACs match
+  }
   group.racks.push(newRack);
+  updateADDRackESP(Groupid, newWrackid, curr_mac);
   saveDataToFile(cache);
+
   res.json({ message: "Rack added successfully", rack: newRack });
 });
-
-const updatePushScheduleESP = (
-  group_id,
-  rack_id,
-  bin_id,
-  new_schedule_time,
-  color
-) => {
-  const scheduleData = {
-    group_id: group_id,
-    rack_id: rack_id,
-    bin_id: bin_id,
-    new_schedule_time: new_schedule_time,
-    operation: "push",
-    color: color,
-  };
-
-  axios
-    .post("http://192.168.231.227:8000/", scheduleData)
-    .then((response) => {
-      console.log("Schedule added successfully in ESP : ", response.data);
-    })
-    .catch((error) => {
-      console.error("Error adding schedule:", error);
-    });
-};
 
 app.post("/new/schedule", (req, res) => {
   const { group_id, wrack_id, bin_id, new_schduled } = req.body;
@@ -414,16 +439,123 @@ app.post("/new/schedule", (req, res) => {
     new_schduled.time,
     new_schduled.color
   );
-  // updatePushScheduleESP(
-  //   group_id,
-  //   wrack_id,
-  //   bin_id,
-  //   new_schduled.time,
-  //   new_schduled.color
-  // );
+  updatePushScheduleESP(
+    group_id,
+    wrack_id,
+    bin_id,
+    new_schduled.time,
+    new_schduled.color
+  );
   res.json({ message: "Schedule added successfully", bin: bin });
 });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+//=+-----------------------------------------------//
+
+function normalize(data) {
+  let normalize_data = (data / 255) * 64;
+
+  return Math.floor(normalize_data);
+}
+const updateBinClicked = async (group_id, rack_id, bin_id) => {
+  try {
+    const response = await axios.post("http://" + ip + ":8000/", {
+      group_id,
+      rack_id,
+      bin_id,
+      operation: "click-change",
+    });
+
+    console.log("Clickde updated successfully:", response.data);
+  } catch (error) {
+    console.error(
+      "Error updating Clicked Event color:",
+      error.response ? error.response.data : error.message
+    );
+  }
+};
+
+const updateBinColorESP = async (group_id, rack_id, bin_id, color) => {
+  console.log(color);
+  color = [normalize(color[0]), normalize(color[1]), normalize(color[2])];
+  console.log(color);
+  try {
+    const response = await axios.post("http://" + ip + ":8000/", {
+      group_id,
+      rack_id,
+      bin_id,
+      operation: "color-change",
+      color,
+    });
+
+    console.log("Color updated successfully:", response.data);
+  } catch (error) {
+    console.error(
+      "Error updating bin color:",
+      error.response ? error.response.data : error.message
+    );
+  }
+};
+
+const updatePushScheduleESP = (
+  group_id,
+  rack_id,
+  bin_id,
+  new_schedule_time,
+  color
+) => {
+  const scheduleData = {
+    group_id: group_id,
+    rack_id: rack_id,
+    bin_id: bin_id,
+    new_schedule_time: new_schedule_time,
+    operation: "push",
+    color: [normalize(color[0]), normalize(color[1]), normalize(color[2])],
+  };
+
+  axios
+    .post("http://" + ip + ":8000/", scheduleData)
+    .then((response) => {
+      console.log("Schedule added successfully in ESP : ", response.data);
+    })
+    .catch((error) => {
+      console.error("Error adding schedule:", error);
+    });
+};
+const updateADDRackESP = (group_id, new_rack_id, mac) => {
+  console.log("updateADDRackESP");
+  const rackData = {
+    group_id: group_id,
+    new_rack_id: new_rack_id,
+    mac: mac,
+    operation: "add-rack",
+  };
+
+  axios
+    .post("http://" + ip + ":8000/", rackData)
+    .then((response) => {
+      console.log("Schedule added successfully in ESP : ", response.data);
+    })
+    .catch((error) => {
+      console.error("Error adding schedule:", error);
+    });
+};
+const updateADDGroupESP = (new_group_id) => {
+  console.log("updateADDRackESP");
+  const groupData = {
+    new_group_id: new_group_id,
+    operation: "add-master",
+  };
+
+  axios
+    .post("http://" + ip + ":8000/", groupData)
+    .then((response) => {
+      console.log("Schedule added successfully in ESP : ", response.data);
+    })
+    .catch((error) => {
+      console.error("Error adding schedule:", error);
+    });
+};
