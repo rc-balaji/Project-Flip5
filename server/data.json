@@ -1,15 +1,20 @@
 [
   {
-    "Group_id": "GRP1",
+    "Group_id": "gh",
+    "racks": []
+  },
+  {
+    "Group_id": "n",
     "racks": [
       {
-        "rack_id": "RC01",
+        "rack_id": "RC11",
         "mac": [
-          1,
-          2,
-          3,
-          4,
-          5
+          72,
+          231,
+          41,
+          161,
+          144,
+          44
         ],
         "bins": [
           {
@@ -19,420 +24,22 @@
               1
             ],
             "led_pin": 12,
-            "bin_id": "RC01_01",
+            "bin_id": "RC11_01",
             "button_pin": 13,
-            "schedules": [
-              {
-                "enabled": false,
-                "time": "10:42",
-                "color": [
-                  235,
-                  71,
-                  169
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "23:00",
-                "color": [
-                  186,
-                  13,
-                  224
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "20:15",
-                "color": [
-                  123,
-                  175,
-                  118
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "06:12",
-                "color": [
-                  178,
-                  92,
-                  40
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "06:53",
-                "color": [
-                  220,
-                  101,
-                  120
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "16:26",
-                "color": [
-                  69,
-                  152,
-                  110
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "20:15",
-                "color": [
-                  123,
-                  175,
-                  118
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "06:12",
-                "color": [
-                  178,
-                  92,
-                  40
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "06:53",
-                "color": [
-                  220,
-                  101,
-                  120
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "16:26",
-                "color": [
-                  69,
-                  152,
-                  110
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "10:42",
-                "color": [
-                  235,
-                  71,
-                  169
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "23:00",
-                "color": [
-                  186,
-                  13,
-                  224
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "10:42",
-                "color": [
-                  235,
-                  71,
-                  169
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "23:00",
-                "color": [
-                  186,
-                  13,
-                  224
-                ]
-              }
-            ],
+            "schedules": [],
             "enabled": false,
             "clicked": false
           },
           {
             "color": [
-              255,
-              255,
-              0
+              1,
+              1,
+              1
             ],
             "led_pin": 25,
-            "bin_id": "RC01_02",
+            "bin_id": "RC11_02",
             "button_pin": 14,
-            "schedules": [
-              {
-                "time": "22:49",
-                "enabled": false,
-                "color": [
-                  255,
-                  255,
-                  0
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "08:24",
-                "color": [
-                  116,
-                  217,
-                  64
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "18:49",
-                "color": [
-                  130,
-                  51,
-                  71
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "18:25",
-                "color": [
-                  147,
-                  25,
-                  240
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "18:45",
-                "color": [
-                  184,
-                  112,
-                  92
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "04:44",
-                "color": [
-                  93,
-                  157,
-                  88
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "02:04",
-                "color": [
-                  123,
-                  163,
-                  164
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "02:02",
-                "color": [
-                  118,
-                  26,
-                  214
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "13:00",
-                "color": [
-                  249,
-                  178,
-                  51
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "04:02",
-                "color": [
-                  225,
-                  71,
-                  12
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "02:51",
-                "color": [
-                  88,
-                  43,
-                  144
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "10:08",
-                "color": [
-                  132,
-                  196,
-                  184
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "19:51",
-                "color": [
-                  13,
-                  221,
-                  160
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "11:17",
-                "color": [
-                  138,
-                  167,
-                  28
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "03:47",
-                "color": [
-                  49,
-                  129,
-                  215
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "18:49",
-                "color": [
-                  130,
-                  51,
-                  71
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "18:25",
-                "color": [
-                  147,
-                  25,
-                  240
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "18:45",
-                "color": [
-                  184,
-                  112,
-                  92
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "04:44",
-                "color": [
-                  93,
-                  157,
-                  88
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "02:04",
-                "color": [
-                  123,
-                  163,
-                  164
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "02:02",
-                "color": [
-                  118,
-                  26,
-                  214
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "13:00",
-                "color": [
-                  249,
-                  178,
-                  51
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "04:02",
-                "color": [
-                  225,
-                  71,
-                  12
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "02:51",
-                "color": [
-                  88,
-                  43,
-                  144
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "10:08",
-                "color": [
-                  132,
-                  196,
-                  184
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "19:51",
-                "color": [
-                  13,
-                  221,
-                  160
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "11:17",
-                "color": [
-                  138,
-                  167,
-                  28
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "03:47",
-                "color": [
-                  49,
-                  129,
-                  215
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "08:24",
-                "color": [
-                  116,
-                  217,
-                  64
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "08:24",
-                "color": [
-                  116,
-                  217,
-                  64
-                ]
-              }
-            ],
+            "schedules": [],
             "enabled": false,
             "clicked": false
           },
@@ -443,271 +50,9 @@
               1
             ],
             "led_pin": 26,
-            "bin_id": "RC01_03",
+            "bin_id": "RC11_03",
             "button_pin": 15,
-            "schedules": [
-              {
-                "enabled": false,
-                "time": "17:10",
-                "color": [
-                  81,
-                  80,
-                  50
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "06:51",
-                "color": [
-                  240,
-                  116,
-                  154
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "20:34",
-                "color": [
-                  168,
-                  222,
-                  47
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "18:02",
-                "color": [
-                  90,
-                  148,
-                  138
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "01:21",
-                "color": [
-                  176,
-                  102,
-                  147
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "23:08",
-                "color": [
-                  96,
-                  68,
-                  144
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "00:25",
-                "color": [
-                  96,
-                  236,
-                  167
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "07:49",
-                "color": [
-                  196,
-                  136,
-                  220
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "23:29",
-                "color": [
-                  13,
-                  92,
-                  92
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "19:32",
-                "color": [
-                  127,
-                  225,
-                  177
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "17:21",
-                "color": [
-                  51,
-                  132,
-                  56
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "03:23",
-                "color": [
-                  246,
-                  122,
-                  205
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "06:45",
-                "color": [
-                  183,
-                  52,
-                  198
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "18:02",
-                "color": [
-                  90,
-                  148,
-                  138
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "01:21",
-                "color": [
-                  176,
-                  102,
-                  147
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "23:08",
-                "color": [
-                  96,
-                  68,
-                  144
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "00:25",
-                "color": [
-                  96,
-                  236,
-                  167
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "07:49",
-                "color": [
-                  196,
-                  136,
-                  220
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "23:29",
-                "color": [
-                  13,
-                  92,
-                  92
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "19:32",
-                "color": [
-                  127,
-                  225,
-                  177
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "17:21",
-                "color": [
-                  51,
-                  132,
-                  56
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "03:23",
-                "color": [
-                  246,
-                  122,
-                  205
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "06:45",
-                "color": [
-                  183,
-                  52,
-                  198
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "17:10",
-                "color": [
-                  81,
-                  80,
-                  50
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "06:51",
-                "color": [
-                  240,
-                  116,
-                  154
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "20:34",
-                "color": [
-                  168,
-                  222,
-                  47
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "17:10",
-                "color": [
-                  81,
-                  80,
-                  50
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "06:51",
-                "color": [
-                  240,
-                  116,
-                  154
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "20:34",
-                "color": [
-                  168,
-                  222,
-                  47
-                ]
-              }
-            ],
+            "schedules": [],
             "enabled": false,
             "clicked": false
           },
@@ -718,172 +63,447 @@
               1
             ],
             "led_pin": 27,
-            "bin_id": "RC01_04",
+            "bin_id": "RC11_04",
             "button_pin": 16,
-            "schedules": [
-              {
-                "enabled": false,
-                "time": "10:01",
-                "color": [
-                  11,
-                  254,
-                  25
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "10:45",
-                "color": [
-                  242,
-                  153,
-                  103
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "04:22",
-                "color": [
-                  197,
-                  75,
-                  177
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "20:08",
-                "color": [
-                  235,
-                  107,
-                  218
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "08:06",
-                "color": [
-                  251,
-                  246,
-                  10
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "20:23",
-                "color": [
-                  226,
-                  235,
-                  137
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "15:09",
-                "color": [
-                  167,
-                  188,
-                  196
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "08:06",
-                "color": [
-                  251,
-                  246,
-                  10
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "20:23",
-                "color": [
-                  226,
-                  235,
-                  137
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "15:09",
-                "color": [
-                  167,
-                  188,
-                  196
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "10:01",
-                "color": [
-                  11,
-                  254,
-                  25
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "10:45",
-                "color": [
-                  242,
-                  153,
-                  103
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "04:22",
-                "color": [
-                  197,
-                  75,
-                  177
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "20:08",
-                "color": [
-                  235,
-                  107,
-                  218
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "10:01",
-                "color": [
-                  11,
-                  254,
-                  25
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "10:45",
-                "color": [
-                  242,
-                  153,
-                  103
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "04:22",
-                "color": [
-                  197,
-                  75,
-                  177
-                ]
-              },
-              {
-                "enabled": false,
-                "time": "20:08",
-                "color": [
-                  235,
-                  107,
-                  218
-                ]
-              }
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          }
+        ]
+      },
+      {
+        "rack_id": "RC19",
+        "master": [
+          72,
+          231,
+          41,
+          161,
+          144,
+          44
+        ],
+        "mac": [
+          44,
+          188,
+          187,
+          5,
+          52,
+          208
+        ],
+        "bins": [
+          {
+            "color": [
+              1,
+              1,
+              1
             ],
+            "led_pin": 12,
+            "bin_id": "RC19_01",
+            "button_pin": 13,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 25,
+            "bin_id": "RC19_02",
+            "button_pin": 14,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 26,
+            "bin_id": "RC19_03",
+            "button_pin": 15,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 27,
+            "bin_id": "RC19_04",
+            "button_pin": 16,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          }
+        ]
+      },
+      {
+        "rack_id": "RC19c",
+        "master": [
+          72,
+          231,
+          41,
+          161,
+          144,
+          44
+        ],
+        "mac": [
+          44,
+          188,
+          187,
+          5,
+          52,
+          208
+        ],
+        "bins": [
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 12,
+            "bin_id": "RC19c_01",
+            "button_pin": 13,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 25,
+            "bin_id": "RC19c_02",
+            "button_pin": 14,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 26,
+            "bin_id": "RC19c_03",
+            "button_pin": 15,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 27,
+            "bin_id": "RC19c_04",
+            "button_pin": 16,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          }
+        ]
+      },
+      {
+        "rack_id": "RC19cj",
+        "master": [
+          72,
+          231,
+          41,
+          161,
+          144,
+          44
+        ],
+        "mac": [
+          44,
+          188,
+          187,
+          5,
+          52,
+          208
+        ],
+        "bins": [
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 12,
+            "bin_id": "RC19cj_01",
+            "button_pin": 13,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 25,
+            "bin_id": "RC19cj_02",
+            "button_pin": 14,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 26,
+            "bin_id": "RC19cj_03",
+            "button_pin": 15,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 27,
+            "bin_id": "RC19cj_04",
+            "button_pin": 16,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          }
+        ]
+      },
+      {
+        "rack_id": "RC19ctf",
+        "master": [
+          72,
+          231,
+          41,
+          161,
+          144,
+          44
+        ],
+        "mac": [
+          44,
+          188,
+          187,
+          5,
+          52,
+          208
+        ],
+        "bins": [
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 12,
+            "bin_id": "RC19ctf_01",
+            "button_pin": 13,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 25,
+            "bin_id": "RC19ctf_02",
+            "button_pin": 14,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 26,
+            "bin_id": "RC19ctf_03",
+            "button_pin": 15,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 27,
+            "bin_id": "RC19ctf_04",
+            "button_pin": 16,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          }
+        ]
+      },
+      {
+        "rack_id": "RC19ctfb",
+        "master": [
+          72,
+          231,
+          41,
+          161,
+          144,
+          44
+        ],
+        "mac": [
+          44,
+          188,
+          187,
+          5,
+          52,
+          208
+        ],
+        "bins": [
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 12,
+            "bin_id": "RC19ctfb_01",
+            "button_pin": 13,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 25,
+            "bin_id": "RC19ctfb_02",
+            "button_pin": 14,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 26,
+            "bin_id": "RC19ctfb_03",
+            "button_pin": 15,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 27,
+            "bin_id": "RC19ctfb_04",
+            "button_pin": 16,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          }
+        ]
+      },
+      {
+        "rack_id": "RC19ctfb8",
+        "master": [
+          72,
+          231,
+          41,
+          161,
+          144,
+          44
+        ],
+        "mac": [
+          44,
+          188,
+          187,
+          5,
+          52,
+          208
+        ],
+        "bins": [
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 12,
+            "bin_id": "RC19ctfb8_01",
+            "button_pin": 13,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 25,
+            "bin_id": "RC19ctfb8_02",
+            "button_pin": 14,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 26,
+            "bin_id": "RC19ctfb8_03",
+            "button_pin": 15,
+            "schedules": [],
+            "enabled": false,
+            "clicked": false
+          },
+          {
+            "color": [
+              1,
+              1,
+              1
+            ],
+            "led_pin": 27,
+            "bin_id": "RC19ctfb8_04",
+            "button_pin": 16,
+            "schedules": [],
             "enabled": false,
             "clicked": false
           }
