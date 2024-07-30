@@ -36,7 +36,7 @@ def read_config():
         return config
     except Exception as err:
         print("Failed to read configuration:", err)
-        raise err
+        raise err  
 
 class Bin:
     def __init__(self, bin_config, index, rack_id, espnow_instance, master_mac):
@@ -136,7 +136,9 @@ def handle_color_change_message(msg_data, config, rack_id):
     color = tuple(msg_data['color'])
     print("CALLEDDD")
     # Find the bin with the given rack_id and bin_index
+    
     for bin in bins:
+        print(bin)
         if bin.index == bin_index:
             # Update color in the Bin object
             bin.color = color
@@ -233,10 +235,10 @@ def espnow_listener( config, rack_id):
                     else:
                         print(f"Unknown operation: {operation}")
 
-                except ujson.JSONDecodeError as json_err:
-                    print(f"Error parsing JSON message: {msg}. Error: {json_err}")
-                except KeyError as key_err:
-                    print(f"Missing expected key in message: {msg}. Error: {key_err}")
+#                 except ujson.JSONDecodeError as json_err:
+#                     print(f"Error parsing JSON message: {msg}. Error: {json_err}")
+#                 except KeyError as key_err:
+#                     print(f"Missing expected key in message: {msg}. Error: {key_err}")
                 except Exception as err:
                     print(f"Unexpected error processing message: {msg}. Error: {err}")
             else:
@@ -246,7 +248,10 @@ def espnow_listener( config, rack_id):
             print(f"Error receiving message: {err}")
             # If the error is related to ESP-NOW instance, consider reinitializing it.
             e = init_espnow()
-            e.add_peer(master_mac)
+            try:
+                e.add_peer(master_mac)
+            except Exception:
+                print("Already")
 
         time.sleep(1)  # Minimal delay to keep the system running
 
@@ -256,7 +261,6 @@ config , master_mac , rack_id,e= None , None , None,None
 
 def main():
     global config , master_mac , rack_id,e,bins
-    bins = None
     bins = []
     config = read_config()
     master_mac = bytes(config['master'])
@@ -285,8 +289,3 @@ _thread.start_new_thread(espnow_listener, (config, rack_id))
 # Main loop to keep the script running
 while True:
     time.sleep(1)
-
-
-
-
-

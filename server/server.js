@@ -156,6 +156,20 @@ app.get("/data", (req, res) => {
   }
 });
 
+const updateSchedulesWithDelay = (scheduleDataArray) => {
+  scheduleDataArray.forEach((scheduleData, index) => {
+    setTimeout(() => {
+      updatePushScheduleESP(
+        scheduleData.group_id,
+        scheduleData.rack_id,
+        scheduleData.bin_id,
+        scheduleData.new_schedule_time,
+        scheduleData.color
+      );
+    }, index * 1000); // 1 second delay between each call
+  });
+};
+
 // Import route
 app.post("/import", upload.single("file"), (req, res) => {
   const file = req.file;
@@ -165,6 +179,8 @@ app.post("/import", upload.single("file"), (req, res) => {
   const jsonData = xlsx.utils.sheet_to_json(worksheet);
 
   updateCache(); // Ensure cache is up-to-date
+
+  const scheduleDataArray = [];
 
   jsonData.forEach((row) => {
     const { Group_id, rack_id, bin_id, scheduled_time, color } = row;
@@ -181,16 +197,29 @@ app.post("/import", upload.single("file"), (req, res) => {
       return res.status(404).json({ error: "Bin not found" });
     }
 
-    var colorArr = color.split(",").map(Number);
+    const colorArr = color.split(",").map(Number);
     bin.schedules.push({
       enabled: false,
       time: scheduled_time,
+      color: colorArr,
+    });
+
+    // Add schedule data to array for delayed processing
+    scheduleDataArray.push({
+      group_id: Group_id,
+      rack_id: rack_id,
+      bin_id: bin_id,
+      new_schedule_time: scheduled_time,
       color: colorArr,
     });
   });
 
   saveDataToFile(cache);
   fs.unlinkSync(file.path); // Remove the uploaded file
+
+  // Call the function to update schedules with a delay
+  updateSchedulesWithDelay(scheduleDataArray);
+
   res.json({ message: "File imported and data updated successfully" });
 });
 
@@ -389,7 +418,7 @@ app.post("/new/wrack", (req, res) => {
 
   const binCount = 4;
   const binsToAdd = Array.from({ length: binCount }, (_, index) => ({
-    color: [50, 50, 50],
+    color: [1, 1, 1],
     led_pin: ledPins[index],
     bin_id: `${newWrackid}_0${index + 1}`,
     button_pin: buttonPins[index],
@@ -425,10 +454,10 @@ app.post("/new/schedule", (req, res) => {
 
   bin.schedules.push(new_schduled);
 
-  // If this is the first schedule, update the bin color
-  if (bin.schedules.length === 1) {
-    bin.color = new_schduled.color;
-  }
+  // // If this is the first schedule, update the bin color
+  // if (bin.schedules.length === 1) {
+  //   bin.color = new_schduled.color;
+  // }
 
   saveDataToFile(cache);
 

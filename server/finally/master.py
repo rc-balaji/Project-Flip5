@@ -261,10 +261,10 @@ def start_server():
         cl.close()
 
 # Start HTTP server in a new thread
-_thread.start_new_thread(start_server, ())
 
+_thread.start_new_thread(start_server, ())
+_thread.start_new_thread(receive_message, ())
 # Start message receiving loop in the main thread
-receive_message()
 
 
 
